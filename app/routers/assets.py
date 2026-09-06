@@ -1,8 +1,10 @@
 import uuid
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, File, HTTPException, Query, UploadFile, status, Depends
+from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
@@ -166,6 +168,73 @@ async def list_assets(skip: int = Query(0, ge=0), limit: int = Query(20, ge=1, l
         ))
         
     return AssetListResponse(assets=items, total=total)
+
+
+@router.get(
+    "/{asset_id}/preview",
+    summary="Serve a web-renderable PNG preview of an asset",
+    response_class=FileResponse,
+    responses={
+        200: {"content": {"image/png": {}}, "description": "PNG preview"},
+        404: {"description": "Asset not found"},
+        422: {"description": "Raster could not be converted to a preview"},
+    },
+)
+async def get_asset_preview(
+    asset_id: str,
+    max_dimension: int = Query(1024, ge=256, le=4096, alias="max"),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Returns an 8-bit RGB PNG rendition of the asset so a browser can display it.
+
+    Source imagery is GeoTIFF — often 12/16-bit or float SAR — which no browser
+    can render. `generate_rgb_preview` already handles the percentile stretch and
+    band selection; this endpoint is the missing HTTP surface for it.
+
+    The rendition is cached under `data/derived/` and regenerated only when the
+    source file is newer than the cached PNG, so repeat views cost a stat call
+    rather than a full raster read.
+    """
+    result = await db.execute(select(ImageAsset).where(ImageAsset.asset_id == asset_id))
+    asset = result.scalars().first()
+    if not asset:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Asset '{asset_id}' not found.")
+
+    source = Path(asset.uri)
+    if not source.exists():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Asset '{asset_id}' is registered but its file is missing from storage.",
+        )
+
+    storage = get_storage()
+    cache_path = Path(storage.root) / "derived" / f"{asset_id}_{max_dimension}.png"
+
+    cache_is_fresh = (
+        cache_path.exists()
+        and cache_path.stat().st_mtime >= source.stat().st_mtime
+    )
+
+    if not cache_is_fresh:
+        from app.geospatial.preview_generator import generate_rgb_preview
+
+        try:
+            generate_rgb_preview(source, cache_path, max_dimension=max_dimension)
+        except Exception as exc:
+            logger.warning("preview_generation_failed", asset_id=asset_id, error=str(exc))
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"Could not render a preview for '{asset_id}': {exc}",
+            )
+
+    return FileResponse(
+        cache_path,
+        media_type="image/png",
+        # Renditions are content-addressed by (asset_id, max_dimension) and the
+        # source is immutable once uploaded, so this is safe to cache hard.
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
 
 
 @router.delete(

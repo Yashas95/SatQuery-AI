@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useHeroExitNavigation } from "@/hooks/useHeroTransition";
 import { useSceneStore } from "@/hooks/useSceneStore";
 import { palette } from "@/lib/theme";
 
@@ -30,6 +31,7 @@ export default function QueryDemo() {
   const isActive = state === "query-active";
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const { exitTo } = useHeroExitNavigation();
 
   // Rotating typewriter placeholder — stops once the user types.
   useEffect(() => {
@@ -74,11 +76,25 @@ export default function QueryDemo() {
     return () => clearInterval(timer);
   }, [isActive]);
 
+  /**
+   * Two different intents share this button, so it reads them apart:
+   *
+   * - Nothing typed → the visitor is looking, not asking. Play the
+   *   on-globe demo, which is what the hero is here to show.
+   * - Something typed → that's a real question. Carry it into the
+   *   workspace rather than answering it with an animation, which would
+   *   be theatre dressed up as a result.
+   */
   const submit = () => {
-    const q = value.trim() || SAMPLE_QUERIES[placeholderIndex];
-    runQueryDemo(q);
-    setValue("");
-    inputRef.current?.blur();
+    const typedQuery = value.trim();
+
+    if (!typedQuery) {
+      runQueryDemo(SAMPLE_QUERIES[placeholderIndex]);
+      inputRef.current?.blur();
+      return;
+    }
+
+    exitTo(`/analyze?q=${encodeURIComponent(typedQuery)}`);
   };
 
   return (

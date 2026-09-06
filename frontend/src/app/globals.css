@@ -55,7 +55,66 @@
   --chip-text: #dcebff;
 }
 
+/* ── App-shell surfaces ──────────────────────────────────────────────────────
+   The hero floats dark glass panels over a WebGL canvas; the analysis
+   screens are opaque document chrome. Those need surface tokens the hero
+   never had, so they're added here rather than reusing --control-bg (which
+   is translucent by design and would let page content bleed through a card).
+   Both modes are defined so the existing theme toggle carries across. */
+:root {
+  --page-canvas: #faf5ec;
+  --surface: #ffffff;
+  --surface-sunken: #f4eee2;
+  --surface-inset: #fbf8f2;
+  --rule-hairline: rgba(20, 32, 42, 0.1);
+  --rule-strong: rgba(20, 32, 42, 0.16);
+  /* Deep teal: primary actions, brand mark. Darker than --accent, which is
+     tuned to glow against black space rather than to carry white text. */
+  --brand-deep: #12463d;
+  --brand-deep-hover: #0d352e;
+  --brand-on-deep: #f4faf7;
+  /* Terracotta: section eyebrows, active-nav underline, the masthead rule. */
+  --brand-rule: #c1552e;
+  --brand-rule-soft: rgba(193, 85, 46, 0.12);
+  --state-ok: #1d6b52;
+  --state-warn: #a8681a;
+  --state-error: #a83a2c;
+}
+
+:root[data-theme="dark"] {
+  /* Pure black, matching the hero's dark background exactly. Any lighter
+     and the seam between the landing page and the workspace shows as a
+     step change in the ground the moment you cross it. */
+  --page-canvas: #000000;
+  /* Translucent in dark mode only: the panels are meant to float over the
+     sky rather than punch opaque holes in it. Kept above 0.8 alpha so body
+     text and small mono metadata keep their contrast against whatever
+     star happens to sit behind them. */
+  --surface: rgba(18, 27, 35, 0.86);
+  --surface-sunken: rgba(9, 15, 21, 0.82);
+  --surface-inset: rgba(22, 33, 42, 0.9);
+  --rule-hairline: rgba(160, 200, 235, 0.14);
+  --rule-strong: rgba(160, 200, 235, 0.24);
+  --brand-deep: #2e9483;
+  --brand-deep-hover: #37ab98;
+  --brand-on-deep: #04140f;
+  --brand-rule: #e07a4f;
+  --brand-rule-soft: rgba(224, 122, 79, 0.16);
+  --state-ok: #4dbd93;
+  --state-warn: #e0a44f;
+  --state-error: #e07463;
+}
+
 @theme inline {
+  --color-page-canvas: var(--page-canvas);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-inset: var(--surface-inset);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-rule: var(--brand-rule);
+  --color-ink-primary: var(--ink-primary);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sq-cyan: var(--sq-cyan);
@@ -74,15 +133,72 @@ body {
   overscroll-behavior: none;
 }
 
-/* The hero owns the viewport; no page scroll behind the canvas. */
+/* Page scroll is deliberately NOT disabled on <body>. The analysis screens
+   need to scroll, and killing it globally would force every one of them to
+   fight the rule. The hero clips its own canvas (`main.overflow-hidden`)
+   and the app shell owns a scroll container of its own, so neither screen
+   depends on a global lock. */
 body {
   margin: 0;
-  overflow: hidden;
 }
 
 ::selection {
   background: rgba(61, 219, 224, 0.3);
   color: #ffffff;
+}
+
+/* Arrival from the hero's departure animation. The globe flies out, the
+   route changes, and the workspace settles in rather than snapping into
+   place — which is what makes the two screens read as one product. Short
+   and small on purpose: this plays on every navigation between analysis
+   screens, and anything longer becomes a tax on routine use.
+   The reduced-motion rule at the foot of this file neutralises it. */
+@keyframes sq-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sq-arrive {
+  animation: sq-arrive 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The star field is a dark-mode treatment. On the cream light theme the
+   PRD mockups specify, scattered white points read as rendering artefacts
+   rather than as sky. */
+:root:not([data-theme="dark"]) .sq-space {
+  display: none;
+}
+
+/* Star travel is no longer CSS. It's a continuous one-way drift driven by
+   rAF in SpaceBackdrop, with a velocity impulse on each navigation that
+   decays back to the base speed. Keyframes can loop or ease to a target,
+   but they can't carry a velocity that varies with what the user just did,
+   and retiming one mid-flight jumps. The old out/back keyframes also
+   returned the sky to its starting point, which turned every navigation
+   into a left-right twitch instead of forward movement. */
+
+/* A minority of stars breathe. Opacity only — no transform — so this stays
+   off the compositor's critical path while imagery is being panned. */
+@keyframes sq-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.sq-twinkle {
+  animation-name: sq-twinkle;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
 }
 
 /* drei's <Html> wrapper should never intercept pointer events unless a
