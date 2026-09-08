@@ -5,7 +5,6 @@ import SceneHUD from "./SceneHUD";
 import ThemeControls from "./ThemeControls";
 import { useHeroExitNavigation } from "@/hooks/useHeroTransition";
 import { HERO_EXIT_MS } from "@/lib/heroExit";
-import { palette } from "@/lib/theme";
 
 /** Doors into the analysis app. The hero is the landing page; these are
  *  how a visitor actually gets to the tool. */
@@ -32,18 +31,6 @@ export default function HeroOverlay() {
       {/* top bar */}
       <header className="flex items-center justify-between px-6 py-5 sm:px-10">
         <div className="pointer-events-auto flex items-center gap-2.5">
-          <div
-            className="grid h-7 w-7 place-items-center rounded-md border"
-            style={{
-              borderColor: "rgba(61,219,224,0.45)",
-              background: "rgba(61,219,224,0.1)",
-            }}
-          >
-            <div
-              className="h-2 w-2 rounded-full"
-              style={{ background: palette.cyan, boxShadow: `0 0 10px ${palette.cyan}` }}
-            />
-          </div>
           <span
             className="font-mono text-xs tracking-[0.22em]"
             style={{ color: "var(--ink-primary)" }}
