@@ -13,7 +13,6 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 
-import AgentActivity from "@/components/app/AgentActivity";
 import AssetList from "@/components/app/AssetList";
 import FindingsPanel from "@/components/app/FindingsPanel";
 import ImageryViewer from "@/components/app/ImageryViewer";
@@ -222,13 +221,7 @@ function AnalyzeWorkspace() {
             }
           />
 
-          <Panel>
-            <AgentActivity
-              trace={analysis.trace}
-              phase={analysis.phase}
-              liveTrace={analysis.liveTrace}
-            />
-          </Panel>
+          
         </div>
 
         {/* ── Result ───────────────────────────────────────────────────── */}
@@ -248,3 +241,4 @@ function AnalyzeWorkspace() {
     </div>
   );
 }
+
