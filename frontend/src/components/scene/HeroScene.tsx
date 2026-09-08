@@ -8,8 +8,6 @@ import * as THREE from "three";
 import Earth from "./Earth";
 import Satellite from "./Satellite";
 import ScanPatch from "./ScanPatch";
-import EvidencePanels from "./EvidencePanels";
-import DataTrace from "./DataTrace";
 import Starfield from "./Starfield";
 import Nebula from "./Nebula";
 import CameraRig from "./CameraRig";
@@ -83,10 +81,7 @@ export default function HeroScene() {
         </Suspense>
         <ScanPatch />
         <Satellite />
-        <DataTrace />
       </GlobeSystem>
-
-      <EvidencePanels />
 
       {/*
         multisampling is not optional here. Once a post-processing composer

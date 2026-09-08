@@ -12,19 +12,11 @@ const SAMPLE_QUERIES = [
   "What is visible in this image?",
 ];
 
-const PIPELINE_STEPS = [
-  "Intent",
-  "Plan",
-  "Route",
-  "Ground",
-  "Synthesise",
-];
 
 export default function QueryDemo() {
   const [value, setValue] = useState("");
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [typed, setTyped] = useState("");
-  const [stepIndex, setStepIndex] = useState(-1);
 
   const runQueryDemo = useSceneStore((s) => s.runQueryDemo);
   const state = useSceneStore((s) => s.state);
@@ -57,24 +49,6 @@ export default function QueryDemo() {
     };
   }, [placeholderIndex, value.length]);
 
-  // Step-through of the agent pipeline while a query is "running".
-  useEffect(() => {
-    if (!isActive) {
-      setStepIndex(-1);
-      return;
-    }
-    let i = 0;
-    setStepIndex(0);
-    const timer = setInterval(() => {
-      i += 1;
-      if (i >= PIPELINE_STEPS.length) {
-        clearInterval(timer);
-        return;
-      }
-      setStepIndex(i);
-    }, 950);
-    return () => clearInterval(timer);
-  }, [isActive]);
 
   /**
    * Two different intents share this button, so it reads them apart:
@@ -151,56 +125,6 @@ export default function QueryDemo() {
         >
           Analyse
         </button>
-      </div>
-
-      {/* Agent pipeline readout — the PRD's "human-readable step summary" */}
-      <div
-        className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] transition-opacity duration-500"
-        style={{ opacity: isActive ? 1 : 0.55 }}
-      >
-        {PIPELINE_STEPS.map((step, i) => (
-          <span key={step} className="flex items-center gap-2">
-            <span
-              className="transition-colors duration-300"
-              style={{
-                color:
-                  isActive && i <= stepIndex ? palette.cyanDeep : palette.inkFaint,
-              }}
-            >
-              {step}
-            </span>
-            {i < PIPELINE_STEPS.length - 1 && (
-              <span style={{ color: "rgba(76,92,104,0.35)" }}>→</span>
-            )}
-          </span>
-        ))}
-      </div>
-
-      {/* Concrete scientific-query examples pulled from the PRD's demo
-          scenario (VQA, grounding, bi-temporal change, optical+SAR) —
-          clicking one runs it, so the capability is discoverable, not
-          just a rotating placeholder the visitor has to wait out. */}
-      <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <span
-          className="font-mono text-[9px] uppercase tracking-[0.14em]"
-          style={{ color: palette.inkFaint }}
-        >
-          Try:
-        </span>
-        {SAMPLE_QUERIES.slice(0, 3).map((q) => (
-          <button
-            key={q}
-            onClick={() => runQueryDemo(q)}
-            className="rounded-full border px-2.5 py-1 text-left font-mono text-[9.5px] leading-none transition-colors duration-200 hover:border-cyan-400/60"
-            style={{
-              borderColor: "rgba(12,28,38,0.16)",
-              background: "rgba(255,255,255,0.5)",
-              color: palette.inkMuted,
-            }}
-          >
-            {q}
-          </button>
-        ))}
       </div>
     </div>
   );

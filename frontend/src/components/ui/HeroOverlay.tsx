@@ -7,13 +7,6 @@ import { useHeroExitNavigation } from "@/hooks/useHeroTransition";
 import { HERO_EXIT_MS } from "@/lib/heroExit";
 import { palette } from "@/lib/theme";
 
-const CAPABILITIES = [
-  "Visual QA",
-  "Text-guided grounding",
-  "Bi-temporal change",
-  "Optical + SAR",
-];
-
 /** Doors into the analysis app. The hero is the landing page; these are
  *  how a visitor actually gets to the tool. */
 const WORKSPACE_LINKS = [
@@ -118,7 +111,6 @@ export default function HeroOverlay() {
               Open workspace →
             </a>
           </nav>
-
           {/* Drops out once the nav needs the room — the nav is functional,
               this is a credit line. */}
           <div
@@ -133,20 +125,10 @@ export default function HeroOverlay() {
       {/* main copy block, right-weighted so the globe owns the left */}
       <div className="flex flex-1 items-center">
         <div className="ml-auto w-full max-w-2xl px-6 pb-16 sm:px-10 lg:pr-16">
-          <div
-            className="pointer-events-auto mb-5 inline-flex items-center gap-2 rounded-full border px-3 py-1"
-            style={{
-              borderColor: "rgba(184,99,26,0.4)",
-              background: "rgba(184,99,26,0.09)",
-            }}
-          >
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ background: "var(--accent-warm)" }}
-            />
+          <div className="pointer-events-auto mb-5">
             <span
               className="font-mono text-[10px] uppercase tracking-[0.16em]"
-              style={{ color: "var(--accent-warm)" }}
+              style={{ color: "var(--ink-muted)" }}
             >
               Agentic vision-language assistant
             </span>
@@ -181,22 +163,6 @@ export default function HeroOverlay() {
           >
             SatQuery — The Earth is speaking. We&rsquo;re making it queryable.
           </p>
-
-          <div className="mt-7 flex flex-wrap gap-2">
-            {CAPABILITIES.map((cap) => (
-              <span
-                key={cap}
-                className="pointer-events-auto rounded-md border px-2.5 py-1 font-mono text-[10px] tracking-wide transition-colors duration-200 hover:border-cyan-400/50"
-                style={{
-                  borderColor: "rgba(61,219,224,0.3)",
-                  background: "var(--chip-bg)",
-                  color: "var(--chip-text)",
-                }}
-              >
-                {cap}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 
