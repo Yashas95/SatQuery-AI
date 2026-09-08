@@ -13,8 +13,8 @@ const BASE_HEIGHT = 0.8;
  * yields to the user the moment they grab it, then resumes once they let
  * go — so it never fights a hand on the wheel.
  *
- * Positive-X target keeps the composition intact (globe left-of-centre,
- * headline column on the right) as the default framing to return to.
+ * Negative-X target keeps the composition intact (globe right-of-centre,
+ * headline column on the left) as the default framing to return to.
  */
 export default function CameraRig() {
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
@@ -24,12 +24,12 @@ export default function CameraRig() {
     // own axis (see useGlobeDrag in Earth.tsx) rather than swinging the
     // camera around it, so the globe stays parked in its corner of the
     // layout instead of sliding across the headline. The look-at point sits
-    // to the RIGHT of the globe, which is what pushes the globe itself to
-    // the left of frame and leaves the right side clear for the copy.
+    // to the LEFT of the globe, which is what pushes the globe itself to
+    // the right of frame and leaves the left side clear for the copy.
     <OrbitControls
       ref={controlsRef}
       makeDefault
-      target={[1.45, -0.05, 0]}
+      target={[-1.45, -0.05, 0]}
       enablePan={false}
       enableRotate={false}
       enableZoom

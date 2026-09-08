@@ -109,9 +109,9 @@ export default function HeroOverlay() {
         </div>
       </header>
 
-      {/* main copy block, right-weighted so the globe owns the left */}
+      {/* main copy block, left-weighted so the globe owns the right */}
       <div className="flex flex-1 items-center">
-        <div className="ml-auto w-full max-w-2xl px-6 pb-16 sm:px-10 lg:pr-16">
+        <div className="mr-auto w-full max-w-2xl px-6 pb-16 sm:px-10 lg:pl-16">
           <div className="pointer-events-auto mb-5">
             <span
               className="font-mono text-[10px] uppercase tracking-[0.16em]"
