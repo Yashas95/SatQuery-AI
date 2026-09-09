@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import FlyVeil from "@/components/ui/FlyVeil";
 import HeroFade from "@/components/ui/HeroFade";
 import HeroOverlay from "@/components/ui/HeroOverlay";
 
@@ -37,6 +38,9 @@ export default function Home() {
         <HeroScene />
       </HeroFade>
       <HeroOverlay />
+      {/* Covers the hard cut from the globe to the workspace at the end of a
+          fly-to-place flight. */}
+      <FlyVeil />
     </main>
   );
 }

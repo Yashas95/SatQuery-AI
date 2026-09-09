@@ -21,6 +21,7 @@ import {
   atmosphereFragmentShader,
 } from "@/lib/shaders/atmosphere";
 import { GLOBE_STYLES, useAppearanceStore } from "@/hooks/useAppearanceStore";
+import { useFlyToStore } from "@/hooks/useFlyToStore";
 import { useEarthTextures } from "@/hooks/useEarthTextures";
 import { earthMeshRef } from "@/lib/earthMeshRef";
 import { palette, themes, timing } from "@/lib/theme";
@@ -151,6 +152,11 @@ export default function Earth() {
   // <GlobeSystem>, one level up, so the orbit ring and satellite turn with
   // the planet instead of the globe spinning out from under them.
   useFrame((_, delta) => {
+    // Hold the idle spin still during a fly-to-place flight: the flight
+    // freezes this angle and rotates the whole group to bring the target to
+    // face the camera, so the surface must not keep turning underneath it.
+    if (useFlyToStore.getState().phase !== "idle") return;
+
     if (earthRef.current) {
       earthRef.current.rotation.y += rotationSpeed * delta;
     }
