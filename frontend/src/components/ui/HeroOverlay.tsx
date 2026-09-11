@@ -119,9 +119,10 @@ export default function HeroOverlay() {
 
           {/* Set large with tight leading and slightly negative tracking —
               a display face wants to be set like a masthead, not like body
-              copy scaled up. The second line is the typeface's real italic;
-              a flat accent rather than a gradient, which at this size reads
-              as a decal laid over the letterforms instead of as colour. */}
+              copy scaled up. Both lines use the same upright cut, so colour
+              alone carries the emphasis: a flat accent rather than a
+              gradient, which at this size reads as a decal laid over the
+              letterforms instead of as colour. */}
           <h1
             className="text-balance text-5xl font-normal leading-[0.95] tracking-[-0.02em] sm:text-6xl lg:text-7xl"
             style={{
@@ -131,9 +132,7 @@ export default function HeroOverlay() {
           >
             What if Earth
             <br />
-            <span className="italic" style={{ color: "var(--accent)" }}>
-              could answer back?
-            </span>
+            <span style={{ color: "var(--accent)" }}>could answer back?</span>
           </h1>
 
           <div className="pointer-events-auto mt-8">

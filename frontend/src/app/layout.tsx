@@ -11,13 +11,15 @@ import ThemeSync from "@/components/app/ThemeSync";
  * next/font downloads and self-hosts the files at build time, so this keeps
  * the original "no font CDN at runtime" constraint — nothing is fetched from
  * a third party when the page loads, and there's no layout shift or
- * render-blocking stylesheet. A real high-contrast serif with a true italic,
- * rather than whatever serif the OS happens to supply.
+ * render-blocking stylesheet. A real high-contrast serif rather than
+ * whatever serif the OS happens to supply.
+ *
+ * Upright only — nothing sets this face in italic, and loading a cut that
+ * never renders is a font file downloaded for nothing.
  */
 const display = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
-  style: ["normal", "italic"],
   display: "swap",
   variable: "--font-display",
 });
