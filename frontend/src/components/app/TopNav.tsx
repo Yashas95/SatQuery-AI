@@ -41,15 +41,12 @@ export default function TopNav() {
       <div className="h-[3px] w-full bg-[var(--brand-rule)]" />
 
       <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-8 px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
-          <BrandMark />
-          <span className="leading-none">
-            <span className="block text-[13px] font-bold uppercase tracking-[0.1em] text-[var(--ink-primary)]">
-              SatQuery AI
-            </span>
-            <span className="mt-1 block text-[11px] uppercase tracking-[0.14em] text-[var(--ink-faint)]">
-              Remote Sensing Intelligence
-            </span>
+        {/* Wordmark only. The icon and the strapline under it were both
+            decoration — the masthead already says where you are, and the
+            nav beside it is what people actually use. */}
+        <Link href="/" className="flex shrink-0 items-center">
+          <span className="text-[13px] font-bold uppercase tracking-[0.1em] text-[var(--ink-primary)]">
+            SatQuery AI
           </span>
         </Link>
 
@@ -106,30 +103,6 @@ export default function TopNav() {
         </div>
       </div>
     </header>
-  );
-}
-
-function BrandMark() {
-  return (
-    <span
-      aria-hidden
-      className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--brand-deep)]"
-    >
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
-        <path
-          d="M12 7.5 16.5 12 12 16.5 7.5 12 12 7.5Z"
-          stroke="var(--brand-on-deep)"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M4 4l3.2 3.2M20 4l-3.2 3.2M4 20l3.2-3.2M20 20l-3.2-3.2"
-          stroke="var(--brand-on-deep)"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-        />
-      </svg>
-    </span>
   );
 }
 

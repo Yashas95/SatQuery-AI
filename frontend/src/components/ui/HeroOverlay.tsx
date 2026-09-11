@@ -88,12 +88,8 @@ export default function HeroOverlay() {
                 event.preventDefault();
                 exitTo("/analyze");
               }}
-              className="ml-2 cursor-pointer rounded-lg border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all duration-200 hover:brightness-125"
-              style={{
-                borderColor: "rgba(61,219,224,0.4)",
-                background: "rgba(61,219,224,0.14)",
-                color: "var(--accent)",
-              }}
+              className="ml-2 cursor-pointer px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors duration-200 hover:text-[var(--ink-primary)]"
+              style={{ color: "var(--accent)" }}
             >
               Open workspace →
             </a>
@@ -121,21 +117,21 @@ export default function HeroOverlay() {
             </span>
           </div>
 
+          {/* Set large with tight leading and slightly negative tracking —
+              a display face wants to be set like a masthead, not like body
+              copy scaled up. The second line is the typeface's real italic;
+              a flat accent rather than a gradient, which at this size reads
+              as a decal laid over the letterforms instead of as colour. */}
           <h1
-            className="text-balance text-4xl font-normal leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
-            style={{ color: "var(--ink-primary)", fontFamily: "var(--font-serif-display)" }}
+            className="text-balance text-5xl font-normal leading-[0.95] tracking-[-0.02em] sm:text-6xl lg:text-7xl"
+            style={{
+              color: "var(--ink-primary)",
+              fontFamily: "var(--font-serif-display)",
+            }}
           >
             What if Earth
             <br />
-            <span
-              className="italic"
-              style={{
-                background: "linear-gradient(100deg, var(--accent), var(--accent-warm))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
+            <span className="italic" style={{ color: "var(--accent)" }}>
               could answer back?
             </span>
           </h1>

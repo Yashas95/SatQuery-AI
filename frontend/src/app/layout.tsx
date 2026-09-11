@@ -1,11 +1,29 @@
 import type { Metadata } from "next";
+import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
 import SpaceBackdrop from "@/components/app/SpaceBackdrop";
 import ThemeSync from "@/components/app/ThemeSync";
 
+/**
+ * The display face for the headline.
+ *
+ * next/font downloads and self-hosts the files at build time, so this keeps
+ * the original "no font CDN at runtime" constraint — nothing is fetched from
+ * a third party when the page loads, and there's no layout shift or
+ * render-blocking stylesheet. A real high-contrast serif with a true italic,
+ * rather than whatever serif the OS happens to supply.
+ */
+const display = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-display",
+});
+
 export const metadata: Metadata = {
-  title: "SatQuery AI — Ask satellite imagery anything",
+  title: "SatQuery — Ask satellite imagery anything",
   description:
     "An agentic vision-language assistant for remote-sensing imagery. Natural-language queries planned, routed to specialist models, and answered with grounded visual evidence.",
 };
@@ -16,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`h-full antialiased ${display.variable}`}>
       <body className="h-full">
         {/* Both live in the root layout so they persist across navigation:
             the theme must be applied before any route paints, and the sky

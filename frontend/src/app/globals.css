@@ -29,10 +29,12 @@
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-geist-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-  /* Editorial serif for the headline, matching the reference comp — a
-     system stack so the build never depends on a font CDN. */
-  --font-serif-display: "Iowan Old Style", "Palatino Linotype", Palatino,
-    Georgia, "Times New Roman", serif;
+  /* Editorial serif for the headline. --font-display is Instrument Serif,
+     self-hosted by next/font at build time (see layout.tsx), so nothing is
+     fetched from a font CDN at runtime. The system faces behind it are the
+     fallback for the brief moment before it swaps in. */
+  --font-serif-display: var(--font-display), "Iowan Old Style",
+    "Palatino Linotype", Georgia, "Times New Roman", serif;
 }
 
 /* Dark mode: deep space. Set by ThemeControls on <html data-theme>, so the
